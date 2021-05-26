@@ -1,3 +1,8 @@
+bot:
+  telegram:
+    token: "1858534217:AAGk_4zGC92qgpzW_y3FTNT2W6f2rh4cBVA"
+    name: "yalta_city_bot"
+
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
