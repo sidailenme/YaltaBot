@@ -1,6 +1,6 @@
 package com.yalta.telegram.config;
 
-import com.yalta.telegram.Bot;
+import com.yalta.telegram.Core;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,12 +9,12 @@ import org.telegram.telegrambots.meta.generics.BotSession;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 @Configuration
-public class BotConfig {
+public class Config {
 
     @Bean
     @SneakyThrows
-    public BotSession botStarter(Bot bot) {
+    public BotSession botSession(Core core) {
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-            return telegramBotsApi.registerBot(bot);
+            return telegramBotsApi.registerBot(core);
     }
 }
