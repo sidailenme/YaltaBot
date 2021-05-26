@@ -20,14 +20,14 @@ public class Core extends TelegramLongPollingBot {
     private String botToken;
 
     @Override
-    public void onUpdateReceived(Update update) {
+    public void onUpdateReceived(Update update) {       //todo rf
         String message = update.getMessage().getText();
         Long chatId = update.getMessage().getChatId();
         sendMsg(chatId.toString(), message);
         System.out.println(message);
     }
 
-    public synchronized void sendMsg(String chatId, String text) { //todo ref
+    public synchronized void sendMsg(String chatId, String text) { //todo rf
         SendMessage message = new SendMessage(chatId, text);
         message.enableMarkdown(true);
         try {
