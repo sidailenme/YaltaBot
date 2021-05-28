@@ -2,7 +2,6 @@ package com.yalta.telegram;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -29,7 +28,6 @@ public class Core extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         receiveQueue.add(update);
-        log.info("Receive >> chatId: {}, text: {}", update.getMessage().getChatId(), update.getMessage().getText());
     }
 
     public synchronized void sendMsg(String chatId, String text) { //todo rf

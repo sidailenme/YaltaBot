@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.generics.BotSession;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
@@ -28,7 +29,7 @@ public class Config {
     }
 
     @Bean
-    public Queue<Update> sendQueue() {      //todo update???
+    public Queue<SendMessage> sendQueue() {
         return new ConcurrentLinkedQueue<>();
     }
 

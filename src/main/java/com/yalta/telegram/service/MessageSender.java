@@ -2,22 +2,25 @@ package com.yalta.telegram.service;
 
 import com.yalta.telegram.Core;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.Queue;
 
+@Slf4j
 @Service
 public class MessageSender implements Runnable {
 
-    @Value("${bot.config.delay-for-send:300}")
-    private int DELAY_FOR_SEND;     //todo rf
+    @Value("${bot.config.sleep-time-for-send:500}")
+    private int SLEEP_TIME_FOR_SEND;     //todo rf
 
-    private final Queue<Update> sendQueue;
+    private final Queue<SendMessage> sendQueue;
     private final Core core;
 
-    public MessageSender(Queue<Update> sendQueue, Core core) {
+    public MessageSender(Queue<SendMessage> sendQueue, Core core) {
         this.sendQueue = sendQueue;
         this.core = core;
 
@@ -27,9 +30,20 @@ public class MessageSender implements Runnable {
         thread.start();
     }
 
-    @SneakyThrows
     @Override
+    @SneakyThrows
     public void run() {
+        while (true) {
+            for (SendMessage message = sendQueue.poll(); message != null; message = sendQueue.poll()) {
+                send(message);
+            }
+            Thread.sleep(SLEEP_TIME_FOR_SEND);
+        }
+    }
 
+    @SneakyThrows
+    public void send(SendMessage message) {
+        core.execute(message);
+        log.info("SEND >> chatId: {}, message {}", message.getChatId(), message.getText());
     }
 }
