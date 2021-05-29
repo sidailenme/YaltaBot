@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.Queue;
 
@@ -43,6 +42,7 @@ public class MessageSender implements Runnable {
 
     @SneakyThrows
     public void send(SendMessage message) {
+        message.enableMarkdown(true);
         core.execute(message);
         log.info("SEND >> chatId: {}, message {}", message.getChatId(), message.getText());
     }
