@@ -7,12 +7,14 @@ bot:
     name: "yalta_city_bot"
 
 spring:
+  profiles:
+    include: catalog
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/yalta
     username: root
     password: rootroot
-
   jpa:
     hibernate:
       ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.MySQL8Dialect

@@ -26,6 +26,6 @@ public class Core extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         receiveQueue.add(update);
-        log.info("RECEIVE >> chatId: {}, message: {}", update.getMessage().getChatId(), update.getMessage().getText());
+//        log.info("RECEIVE >> chatId: {}, message: {}", update.getMessage().getChatId(), update.getMessage().getText()); todo
     }
 }

@@ -11,9 +11,25 @@ import java.util.Optional;
 public enum Command {
 
     NONE("/none"),
-    NOT_A_COMMAND("/none"),
+    NOT_A_COMMAND("/not_a_command"),
 
-    START("/start");
+    START("/start"),
+    INFO("/info"),
+    FEEDBACK("/feedback"),
+
+//    TODAY("/today"),
+
+    CATALOG("/catalog"),
+
+    CAFE("/cafe");
+//    ENTERTAINMENT("/entertainment"),
+//    SIGHTS("/sights"),
+//    DELIVERY("/delivery"),
+//    RENT("/rent"),
+//    TAXI("/taxi"),
+//    AUTO("/auto"),
+//
+//    CINEMA("/cinema");
 
 
     private final String desc;
@@ -24,5 +40,4 @@ public enum Command {
                 .findFirst();
         return optionalCommand.orElse(NONE);
     }
-
 }
