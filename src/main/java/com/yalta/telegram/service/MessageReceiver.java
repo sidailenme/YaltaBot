@@ -1,21 +1,13 @@
 package com.yalta.telegram.service;
 
-import com.yalta.telegram.command.Command;
 import com.yalta.telegram.handler.CallbackQueryHandler;
 import com.yalta.telegram.handler.TextHandler;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Queue;
 
 @Service
@@ -28,19 +20,13 @@ public class MessageReceiver implements Runnable {
     private final TextHandler textHandler;
     private final CallbackQueryHandler callbackQueryHandler;
     private final Queue<Update> receiveQueue;
-    private final Queue<SendMessage> sendQueue;
-    private final Queue<EditMessageText> editQueue;
 
     public MessageReceiver(TextHandler textHandler,
                            CallbackQueryHandler callbackQueryHandler,
-                           Queue<Update> receiveQueue,
-                           Queue<SendMessage> sendQueue,
-                           Queue<EditMessageText> editQueue) {
+                           Queue<Update> receiveQueue) {
         this.textHandler = textHandler;
         this.callbackQueryHandler = callbackQueryHandler;
         this.receiveQueue = receiveQueue;
-        this.sendQueue = sendQueue;
-        this.editQueue = editQueue;
 
         Thread thread = new Thread(this);
         thread.setDaemon(true);

@@ -47,16 +47,21 @@ public class MessageSender implements Runnable {
         }
     }
 
-    @SneakyThrows
     public void send(SendMessage message) {
-        message.enableMarkdown(true);
-        core.execute(message);
-        log.info("SEND >> chatId: {}, message {}", message.getChatId(), message.getText());
+        try {
+            core.execute(message);
+            log.info("SEND >> chatId: {}, message {}", message.getChatId(), message.getText());
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
     }
 
-    @SneakyThrows
     public void edit(EditMessageText message) {
-        core.execute(message);
-        log.info("EDIT >> chatId: {}, message {}", message.getChatId(), message.getText());
+        try {
+            core.execute(message);
+            log.info("EDIT >> chatId: {}, message {}", message.getChatId(), message.getText());
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
     }
 }

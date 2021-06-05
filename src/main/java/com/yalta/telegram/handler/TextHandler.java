@@ -1,68 +1,78 @@
 package com.yalta.telegram.handler;
 
-import com.yalta.telegram.command.Command;
+import com.yalta.telegram.command.TextCommand;
+import com.yalta.telegram.entity.Cafe;
 import com.yalta.telegram.handler.interfaces.Handler;
-import com.yalta.telegram.service.MessageParser;
+import com.yalta.telegram.keyboard.InlineKeyboardUtils;
+import com.yalta.telegram.repository.CafeRepository;
+import com.yalta.telegram.service.MenuView;
+import com.yalta.telegram.service.PreMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Queue;
 
 @Service
 @RequiredArgsConstructor
 public class TextHandler implements Handler<SendMessage> {
 
-    private final MessageParser messageParser;
     private final Queue<SendMessage> sendQueue;
+    private final CafeRepository cafeRepository;
+    private final PreMessage preMessage;
+    private final MenuView menuView;
 
+    @Override
     public void handle(Update update) {
         String chatId = update.getMessage().getChatId().toString();
         String textRequest = update.getMessage().getText();
-
-        Command parsedCommand = messageParser.parse(textRequest);
-        SendMessage message = operate(parsedCommand);
+        TextCommand textCommand = TextCommand.findOnDesc(textRequest);
+        SendMessage message = operate(textCommand, chatId);
         message.setChatId(chatId);
-
-        if (textRequest.equals("1")) {
-            InlineKeyboardMarkup replyMarkup = new InlineKeyboardMarkup();
-            ArrayList<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
-            ArrayList<InlineKeyboardButton> e = new ArrayList<>();
-            e.add(new InlineKeyboardButton("HUJK", null, "qq",
-                    null, null, null, null, null));
-            keyboard.add(e);
-            replyMarkup.setKeyboard(keyboard);
-            message.setReplyMarkup(replyMarkup);
-        }
 
         sendQueue.add(message);
     }
 
-    public SendMessage operate(Command command) {
+    public SendMessage operate(TextCommand textCommand, String chatId) {
         SendMessage message = new SendMessage();
-        switch (command) {
+        switch (textCommand) {
             case NONE:
             case NOT_A_COMMAND:
                 message.setText("Команда не найдена");
                 break;
             case START:
-                break;
+            case MENU:
+                preMessage.send(textCommand, chatId);
+                return menu();
             case INFO:
                 message.setText("info");
                 break;
             case FEEDBACK:
                 message.setText("обратная связь");
                 break;
-            case CATALOG:
-                break;
             case CAFE:
-                break;
+                preMessage.send(textCommand, chatId);
+                return cafe();
         }
         return message;
+    }
+
+    private SendMessage cafe() {
+        Pageable pageable = PageRequest.of(0, 2);
+        Page<Cafe> cafePage = cafeRepository.findAll(pageable);
+
+        SendMessage message = new SendMessage();
+        message.setText(menuView.cafe(cafePage));
+        message.setReplyMarkup(InlineKeyboardUtils.numericPageKeyboard(cafePage));
+
+        return message;
+    }
+
+    private SendMessage menu() {
+        return menuView.menu();
     }
 }

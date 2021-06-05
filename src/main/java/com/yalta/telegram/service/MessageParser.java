@@ -1,20 +1,18 @@
-package com.yalta.telegram.service;
-
-import com.yalta.telegram.command.Command;
-import org.springframework.stereotype.Service;
-
-@Service
-public class MessageParser {
-
-    public Command parse(String cmd) {
-        cmd = cmd.strip();
-        if (cmd.contains(" ")) {
-            cmd = cmd.substring(0, cmd.indexOf(" "));
-        }
-        return isCommand(cmd) ? Command.findOnDesc(cmd) : Command.NOT_A_COMMAND;
-    }
-
-    private boolean isCommand(String text) {
-        return text.startsWith("/");
-    }
-}
+//package com.yalta.telegram.service;
+//
+//import com.yalta.telegram.command.CallbackCommand;
+//import com.yalta.telegram.command.TextCommand;
+//import org.springframework.stereotype.Service;
+//
+//@Service
+//public class MessageParser {
+//
+//    public TextCommand textParse(String cmd) {
+//        return TextCommand.findOnDesc(cmd);
+//    }
+//
+//    public CallbackCommand callbackParse(String data) {
+//        return CallbackCommand.findByData(data);
+//    }
+//
+//}

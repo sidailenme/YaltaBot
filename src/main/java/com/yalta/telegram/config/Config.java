@@ -2,6 +2,7 @@ package com.yalta.telegram.config;
 
 import com.yalta.telegram.Core;
 import lombok.SneakyThrows;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
