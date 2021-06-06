@@ -1,6 +1,6 @@
 pre-messages:
-  messageMap:
-    start: "helloWorld"
-    menu: "description"
-    cafe: "QQQQQQ"
+  preMessageMap:
+    start: "Привет. Пока что меню в разработке, так что не все функции работают"
+    menu: "Основное меню"
+    cafe: "Это будущий список кафе, который можно листать"
     error: "Ой! Что то пошло не так... Обратитесь к администратору"

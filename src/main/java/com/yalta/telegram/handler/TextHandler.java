@@ -20,6 +20,8 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.Queue;
 
+import static com.yalta.telegram.command.TextCommand.*;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -35,13 +37,13 @@ public class TextHandler implements Handler<SendMessage, Pair<TextCommand, Strin
         try {
             String chatId = update.getMessage().getChatId().toString();
             String textRequest = update.getMessage().getText();
-            TextCommand textCommand = TextCommand.findOnDesc(textRequest);
+            TextCommand textCommand = findOnDesc(textRequest);
             Pair<TextCommand, String> pair = new Pair<>(textCommand, chatId);
             SendMessage message = operate(pair);
             message.setChatId(chatId);
             sendQueue.add(message);
         } catch (Exception e) {
-            preMessage.send(TextCommand.ERROR, update.getCallbackQuery().getMessage().getChatId().toString());
+            preMessage.send(ERROR, update.getCallbackQuery().getMessage().getChatId().toString());
             log.error(e.getMessage());
         }
     }
@@ -54,8 +56,9 @@ public class TextHandler implements Handler<SendMessage, Pair<TextCommand, Strin
                 message.setText("Команда не найдена");
                 break;
             case START:
+                preMessage.send(START, pair.right());
+                //through
             case MENU:
-                preMessage.send(pair.left(), pair.right());
                 return menu();
             case INFO:
                 message.setText("info");
@@ -64,7 +67,7 @@ public class TextHandler implements Handler<SendMessage, Pair<TextCommand, Strin
                 message.setText("обратная связь");
                 break;
             case CAFE:
-                preMessage.send(pair.left(), pair.right());
+                preMessage.send(CAFE, pair.right());
                 return cafe();
         }
         return message;

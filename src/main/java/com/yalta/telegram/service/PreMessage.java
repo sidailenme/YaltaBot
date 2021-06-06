@@ -17,10 +17,10 @@ import java.util.Queue;
 public class PreMessage {
 
     private final Queue<SendMessage> sendQueue;
-    private Map<TextCommand, String> messageMap;
+    private Map<TextCommand, String> preMessageMap;
 
     public void send(TextCommand textCommand, String chatId) {
-        SendMessage message = new SendMessage(chatId, messageMap.get(textCommand));
+        SendMessage message = new SendMessage(chatId, preMessageMap.get(textCommand));
         sendQueue.add(message);
     }
 
