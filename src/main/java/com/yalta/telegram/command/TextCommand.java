@@ -4,14 +4,13 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
-import java.util.Map;
 
 @Getter
 @RequiredArgsConstructor
 public enum TextCommand {
 
     NONE("/none"),
-    NOT_A_COMMAND("/not_a_command"),
+    ERROR("/error"),
 
     START("/start"),
     INFO("/info"),
@@ -30,7 +29,6 @@ public enum TextCommand {
 //    CINEMA("/cinema");
 
 
-    private Map<String, String> map;
     private final String desc;
 
     public static TextCommand findOnDesc(String desc) {

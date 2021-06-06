@@ -34,34 +34,31 @@ public class MessageSender implements Runnable {
     }
 
     @Override
-    @SneakyThrows
     public void run() {
         while (true) {
-            for (SendMessage message = sendQueue.poll(); message != null; message = sendQueue.poll()) {
-                send(message);
+            try {
+                for (SendMessage message = sendQueue.poll(); message != null; message = sendQueue.poll()) {
+                    send(message);
+                }
+                for (EditMessageText message = editQueue.poll(); message != null; message = editQueue.poll()) {
+                    edit(message);
+                }
+                Thread.sleep(SLEEP_TIME_FOR_SEND);
+            } catch (Exception e) {
+                log.error(e.getMessage());
             }
-            for (EditMessageText message = editQueue.poll(); message != null; message = editQueue.poll()) {
-                edit(message);
-            }
-            Thread.sleep(SLEEP_TIME_FOR_SEND);
         }
     }
 
+    @SneakyThrows
     public void send(SendMessage message) {
-        try {
-            core.execute(message);
-            log.info("SEND >> chatId: {}, message {}", message.getChatId(), message.getText());
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
+        log.info("SEND >> chatId: {}, message {}", message.getChatId(), message.getText());
+        core.execute(message);
     }
 
+    @SneakyThrows
     public void edit(EditMessageText message) {
-        try {
-            core.execute(message);
-            log.info("EDIT >> chatId: {}, message {}", message.getChatId(), message.getText());
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
+        log.info("EDIT >> chatId: {}, message {}", message.getChatId(), message.getText());
+        core.execute(message);
     }
 }

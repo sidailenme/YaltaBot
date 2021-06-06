@@ -1,4 +1,6 @@
 pre-messages:
   messageMap:
+    start: "helloWorld"
     menu: "description"
     cafe: "QQQQQQ"
+    error: "Ой! Что то пошло не так... Обратитесь к администратору"
