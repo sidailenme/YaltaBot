@@ -10,8 +10,8 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.Queue;
 
-@Service
 @Slf4j
+@Service
 public class MessageReceiver implements Runnable {
 
     @Value("${bot.config.sleep-time-for-receive:500}")
