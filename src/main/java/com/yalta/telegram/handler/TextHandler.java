@@ -3,10 +3,12 @@ package com.yalta.telegram.handler;
 import com.yalta.telegram.command.CallbackCommand;
 import com.yalta.telegram.command.TextCommand;
 import com.yalta.telegram.entity.Cafe;
+import com.yalta.telegram.entity.Rent;
 import com.yalta.telegram.entity.Taxi;
 import com.yalta.telegram.handler.interfaces.Handler;
 import com.yalta.telegram.keyboard.InlineKeyboardUtils;
 import com.yalta.telegram.repository.CafeRepository;
+import com.yalta.telegram.repository.RentRepository;
 import com.yalta.telegram.repository.TaxiRepository;
 import com.yalta.telegram.service.MenuView;
 import com.yalta.telegram.service.PreMessage;
@@ -33,6 +35,7 @@ public class TextHandler implements Handler<SendMessage, Pair<TextCommand, Strin
     private final Queue<SendMessage> sendQueue;
     private final CafeRepository cafeRepository;
     private final TaxiRepository taxiRepository;
+    private final RentRepository rentRepository;
     private final PreMessage preMessage;
     private final MenuView menuView;
 
@@ -76,6 +79,9 @@ public class TextHandler implements Handler<SendMessage, Pair<TextCommand, Strin
             case TAXI:
                 preMessage.send(TAXI, pair.right());
                 return taxi();
+            case RENT:
+                preMessage.send(RENT, pair.right());
+                return rent();
         }
         return message;
     }
@@ -91,7 +97,6 @@ public class TextHandler implements Handler<SendMessage, Pair<TextCommand, Strin
         SendMessage message = new SendMessage();
         message.setText(menuView.cafe(page));
         message.setReplyMarkup(InlineKeyboardUtils.numericPageKeyboard(page, CAFE_PAGE));
-
         return message;
     }
 
@@ -102,7 +107,17 @@ public class TextHandler implements Handler<SendMessage, Pair<TextCommand, Strin
         SendMessage message = new SendMessage();
         message.setText(menuView.taxi(page));
         message.setReplyMarkup(InlineKeyboardUtils.numericPageKeyboard(page, TAXI_PAGE));
-
         return message;
     }
+
+    private SendMessage rent() {
+        Pageable pageable = PageRequest.of(0, 2);
+        Page<Rent> page = rentRepository.findAll(pageable);
+
+        SendMessage message = new SendMessage();
+        message.setText(menuView.rent(page));
+        message.setReplyMarkup(InlineKeyboardUtils.numericPageKeyboard(page, RENT_PAGE));
+        return message;
+    }
+
 }

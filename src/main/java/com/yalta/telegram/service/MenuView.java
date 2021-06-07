@@ -2,6 +2,7 @@ package com.yalta.telegram.service;
 
 import com.yalta.telegram.command.TextCommand;
 import com.yalta.telegram.entity.Cafe;
+import com.yalta.telegram.entity.Rent;
 import com.yalta.telegram.entity.Taxi;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -70,5 +71,13 @@ public class MenuView {
                         .map(taxi -> "Taxi #" + taxi.getId() + ": " + taxi.getName() +
                                 "\n" + taxi.getPhone() + "\n" + taxi.getSite() + "\n")
                         .reduce((s, s2) -> s + "\n" + s2).orElse("error");
+    }
+
+    public String rent(Page<Rent> page) {
+        return "Rent: \n" +
+                page.getContent().stream()
+                .map(rent -> "Rent #" + rent.getId() + ": " + rent.getName() +
+                        "\n" + rent.getPhone() + "\n" + rent.getSite() + "\n")
+                .reduce((s, s2) -> s + "\n" + s2).orElse("error");
     }
 }

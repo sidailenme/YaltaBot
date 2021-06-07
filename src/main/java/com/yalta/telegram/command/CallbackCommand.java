@@ -12,6 +12,7 @@ public enum CallbackCommand {
     NONE("none"),
 
     CAFE_PAGE("cafePage"),
+    RENT_PAGE("rentPage"),
     TAXI_PAGE("taxiPage");
 
 
