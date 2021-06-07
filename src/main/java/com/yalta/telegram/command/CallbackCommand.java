@@ -11,7 +11,8 @@ public enum CallbackCommand {
 
     NONE("none"),
 
-    CAFE_PAGE("cafePage");
+    CAFE_PAGE("cafePage"),
+    TAXI_PAGE("taxiPage");
 
 
     private final String data;

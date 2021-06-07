@@ -3,9 +3,11 @@ package com.yalta.telegram.handler;
 import com.yalta.telegram.command.CallbackCommand;
 import com.yalta.telegram.command.TextCommand;
 import com.yalta.telegram.entity.Cafe;
+import com.yalta.telegram.entity.Taxi;
 import com.yalta.telegram.handler.interfaces.Handler;
 import com.yalta.telegram.keyboard.InlineKeyboardUtils;
 import com.yalta.telegram.repository.CafeRepository;
+import com.yalta.telegram.repository.TaxiRepository;
 import com.yalta.telegram.service.MenuView;
 import com.yalta.telegram.service.PreMessage;
 import com.yalta.utils.Pair;
@@ -29,6 +31,7 @@ public class CallbackQueryHandler implements Handler<EditMessageText, Pair<Callb
     private final Queue<EditMessageText> editQueue;
     private final MenuView menuView;
     private final CafeRepository cafeRepository;
+    private final TaxiRepository taxiRepository;
     private final PreMessage preMessage;
 
     @Override
@@ -51,6 +54,7 @@ public class CallbackQueryHandler implements Handler<EditMessageText, Pair<Callb
     public EditMessageText operate(Pair<CallbackCommand, String> data) {
         return switch (data.left()) {
             case CAFE_PAGE -> cafe(data);
+            case TAXI_PAGE -> taxi(data);
             case NONE -> throw new IllegalArgumentException("switch on NONE case");
         };
     }
@@ -67,6 +71,17 @@ public class CallbackQueryHandler implements Handler<EditMessageText, Pair<Callb
         Pageable pageable = PageRequest.of(pageNum, 2);
         Page<Cafe> page = cafeRepository.findAll(pageable);
         String messageText = menuView.cafe(page);
+        EditMessageText message = new EditMessageText();
+        message.setText(messageText);
+        message.setReplyMarkup(InlineKeyboardUtils.numericPageKeyboard(page, data.left()));
+        return message;
+    }
+
+    private EditMessageText taxi(Pair<CallbackCommand, String> data) {
+        int pageNum = Integer.parseInt(data.right());
+        Pageable pageable = PageRequest.of(pageNum, 3);
+        Page<Taxi> page = taxiRepository.findAll(pageable);
+        String messageText = menuView.taxi(page);
         EditMessageText message = new EditMessageText();
         message.setText(messageText);
         message.setReplyMarkup(InlineKeyboardUtils.numericPageKeyboard(page, data.left()));

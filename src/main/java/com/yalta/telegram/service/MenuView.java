@@ -2,6 +2,7 @@ package com.yalta.telegram.service;
 
 import com.yalta.telegram.command.TextCommand;
 import com.yalta.telegram.entity.Cafe;
+import com.yalta.telegram.entity.Taxi;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
@@ -59,7 +60,15 @@ public class MenuView {
     public String cafe(Page<Cafe> page) {
         return "Cafe: \n" +
                 page.getContent().stream()
-                        .map(cafe -> "Cafe #" + cafe.getId() + ": " + cafe.getName())
+                        .map(cafe -> "Cafe #" + cafe.getId() + ": " + cafe.getName() + "\n")
                         .reduce((s, s2) -> s + "\n" + s2).orElse("empty");
+    }
+
+    public String taxi(Page<Taxi> page) {
+        return "Taxi: \n" +
+                page.getContent().stream()
+                        .map(taxi -> "Taxi #" + taxi.getId() + ": " + taxi.getName() +
+                                "\n" + taxi.getPhone() + "\n" + taxi.getSite() + "\n")
+                        .reduce((s, s2) -> s + "\n" + s2).orElse("error");
     }
 }

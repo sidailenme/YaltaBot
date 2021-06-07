@@ -3,9 +3,11 @@ package com.yalta.telegram.handler;
 import com.yalta.telegram.command.CallbackCommand;
 import com.yalta.telegram.command.TextCommand;
 import com.yalta.telegram.entity.Cafe;
+import com.yalta.telegram.entity.Taxi;
 import com.yalta.telegram.handler.interfaces.Handler;
 import com.yalta.telegram.keyboard.InlineKeyboardUtils;
 import com.yalta.telegram.repository.CafeRepository;
+import com.yalta.telegram.repository.TaxiRepository;
 import com.yalta.telegram.service.MenuView;
 import com.yalta.telegram.service.PreMessage;
 import com.yalta.utils.Pair;
@@ -20,6 +22,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.Queue;
 
+import static com.yalta.telegram.command.CallbackCommand.*;
 import static com.yalta.telegram.command.TextCommand.*;
 
 @Slf4j
@@ -29,6 +32,7 @@ public class TextHandler implements Handler<SendMessage, Pair<TextCommand, Strin
 
     private final Queue<SendMessage> sendQueue;
     private final CafeRepository cafeRepository;
+    private final TaxiRepository taxiRepository;
     private final PreMessage preMessage;
     private final MenuView menuView;
 
@@ -69,8 +73,15 @@ public class TextHandler implements Handler<SendMessage, Pair<TextCommand, Strin
             case CAFE:
                 preMessage.send(CAFE, pair.right());
                 return cafe();
+            case TAXI:
+                preMessage.send(TAXI, pair.right());
+                return taxi();
         }
         return message;
+    }
+
+    private SendMessage menu() {
+        return menuView.menu();
     }
 
     private SendMessage cafe() {
@@ -79,12 +90,19 @@ public class TextHandler implements Handler<SendMessage, Pair<TextCommand, Strin
 
         SendMessage message = new SendMessage();
         message.setText(menuView.cafe(page));
-        message.setReplyMarkup(InlineKeyboardUtils.numericPageKeyboard(page, CallbackCommand.CAFE_PAGE));
+        message.setReplyMarkup(InlineKeyboardUtils.numericPageKeyboard(page, CAFE_PAGE));
 
         return message;
     }
 
-    private SendMessage menu() {
-        return menuView.menu();
+    private SendMessage taxi() {
+        Pageable pageable = PageRequest.of(0, 3);
+        Page<Taxi> page = taxiRepository.findAll(pageable);
+
+        SendMessage message = new SendMessage();
+        message.setText(menuView.taxi(page));
+        message.setReplyMarkup(InlineKeyboardUtils.numericPageKeyboard(page, TAXI_PAGE));
+
+        return message;
     }
 }
