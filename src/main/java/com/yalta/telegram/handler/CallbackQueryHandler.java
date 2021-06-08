@@ -23,6 +23,7 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageTe
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import java.util.Optional;
 import java.util.Queue;
 
 @Slf4j
@@ -58,8 +59,10 @@ public class CallbackQueryHandler implements Handler<EditMessageText, Pair<Callb
         return switch (data.left()) {
             case CAFE_PAGE -> cafe(data);
             case RENT_PAGE -> rent(data);
+            case ENTERTAINMENT_PAGE -> entertainment(data);
+            case DELIVERY_PAGE -> delivery(data);
             case TAXI_PAGE -> taxi(data);
-            case NONE -> throw new IllegalArgumentException("switch on NONE case");
+            default -> throw new IllegalArgumentException("switch on NONE case");
         };
     }
 
@@ -102,4 +105,13 @@ public class CallbackQueryHandler implements Handler<EditMessageText, Pair<Callb
         message.setReplyMarkup(InlineKeyboardUtils.numericPageKeyboard(page, data.left()));
         return message;
     }
+
+    private EditMessageText delivery(Pair<CallbackCommand, String> data) {
+        return null; //todo
+    }
+
+    private EditMessageText entertainment(Pair<CallbackCommand, String> data) {
+        return null; //todo
+    }
+
 }

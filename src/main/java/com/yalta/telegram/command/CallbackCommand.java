@@ -13,6 +13,8 @@ public enum CallbackCommand {
 
     CAFE_PAGE("cafePage"),
     RENT_PAGE("rentPage"),
+    ENTERTAINMENT_PAGE("entertainmentPage"),
+    DELIVERY_PAGE("delivery_page"),
     TAXI_PAGE("taxiPage");
 
 

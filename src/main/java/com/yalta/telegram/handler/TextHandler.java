@@ -1,15 +1,12 @@
 package com.yalta.telegram.handler;
 
-import com.yalta.telegram.command.CallbackCommand;
 import com.yalta.telegram.command.TextCommand;
 import com.yalta.telegram.entity.Cafe;
 import com.yalta.telegram.entity.Rent;
 import com.yalta.telegram.entity.Taxi;
 import com.yalta.telegram.handler.interfaces.Handler;
 import com.yalta.telegram.keyboard.InlineKeyboardUtils;
-import com.yalta.telegram.repository.CafeRepository;
-import com.yalta.telegram.repository.RentRepository;
-import com.yalta.telegram.repository.TaxiRepository;
+import com.yalta.telegram.repository.*;
 import com.yalta.telegram.service.MenuView;
 import com.yalta.telegram.service.PreMessage;
 import com.yalta.utils.Pair;
@@ -22,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import java.util.Optional;
 import java.util.Queue;
 
 import static com.yalta.telegram.command.CallbackCommand.*;
@@ -36,6 +34,8 @@ public class TextHandler implements Handler<SendMessage, Pair<TextCommand, Strin
     private final CafeRepository cafeRepository;
     private final TaxiRepository taxiRepository;
     private final RentRepository rentRepository;
+    private final EntertainmentRepository entertainmentRepository;
+    private final DeliveryRepository deliveryRepository;
     private final PreMessage preMessage;
     private final MenuView menuView;
 
@@ -50,29 +50,21 @@ public class TextHandler implements Handler<SendMessage, Pair<TextCommand, Strin
             message.setChatId(chatId);
             sendQueue.add(message);
         } catch (Exception e) {
-            preMessage.send(ERROR, update.getCallbackQuery().getMessage().getChatId().toString());
+            preMessage.send(ERROR, update.getMessage().getChatId().toString());
             log.error(e.getMessage());
         }
     }
 
     @Override
     public SendMessage operate(Pair<TextCommand, String> pair) {
-        SendMessage message = new SendMessage();
         switch (pair.left()) {
-            case NONE:
-                message.setText("Команда не найдена");
-                break;
             case START:
                 preMessage.send(START, pair.right());
                 //through
             case MENU:
                 return menu();
             case INFO:
-                message.setText("info");
-                break;
-            case FEEDBACK:
-                message.setText("обратная связь");
-                break;
+                return info();
             case CAFE:
                 preMessage.send(CAFE, pair.right());
                 return cafe();
@@ -82,12 +74,23 @@ public class TextHandler implements Handler<SendMessage, Pair<TextCommand, Strin
             case RENT:
                 preMessage.send(RENT, pair.right());
                 return rent();
+            case ENTERTAINMENT:
+                preMessage.send(ENTERTAINMENT, pair.right());
+                return entertainment();
+            case DELIVERY:
+                preMessage.send(DELIVERY, pair.right());
+                return delivery();
+            default:
+                throw new IllegalArgumentException();
         }
-        return message;
     }
 
     private SendMessage menu() {
         return menuView.menu();
+    }
+
+    private SendMessage info() {
+        return null; //todo
     }
 
     private SendMessage cafe() {
@@ -118,6 +121,14 @@ public class TextHandler implements Handler<SendMessage, Pair<TextCommand, Strin
         message.setText(menuView.rent(page));
         message.setReplyMarkup(InlineKeyboardUtils.numericPageKeyboard(page, RENT_PAGE));
         return message;
+    }
+
+    private SendMessage entertainment() {
+        return null; //todo
+    }
+
+    private SendMessage delivery() {
+        return null; //todo
     }
 
 }

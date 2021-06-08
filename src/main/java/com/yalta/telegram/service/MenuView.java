@@ -1,13 +1,9 @@
 package com.yalta.telegram.service;
 
-import com.yalta.telegram.command.TextCommand;
-import com.yalta.telegram.entity.Cafe;
-import com.yalta.telegram.entity.Rent;
-import com.yalta.telegram.entity.Taxi;
+import com.yalta.telegram.entity.*;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -79,5 +75,13 @@ public class MenuView {
                 .map(rent -> "Rent #" + rent.getId() + ": " + rent.getName() +
                         "\n" + rent.getPhone() + "\n" + rent.getSite() + "\n")
                 .reduce((s, s2) -> s + "\n" + s2).orElse("error");
+    }
+
+    public String delivery(Page<Delivery> page) {
+        return "see on " + this.getClass();
+    }
+
+    public String entertainment(Page<Entertainment> page) {
+        return "see on " + this.getClass();
     }
 }

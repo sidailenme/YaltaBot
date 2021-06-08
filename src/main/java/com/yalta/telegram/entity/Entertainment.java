@@ -9,14 +9,15 @@ import javax.persistence.Id;
 
 @Data
 @Entity
-public class Cafe {
+public class Entertainment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String workTime;
     private String address;
     private String phone;
+    private String workTime;
     private String description;
+
 }
