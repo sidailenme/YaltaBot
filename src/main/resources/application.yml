@@ -11,7 +11,7 @@ spring:
     include: menu
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/yalta
+    url: jdbc:mysql://host.docker.internal:3306/yalta>
     username: root
     password: rootroot
   jpa:
